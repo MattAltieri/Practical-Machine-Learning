@@ -70,7 +70,126 @@ img {
 </div>
 
 
-
+<div id="in-sample-versus-out-of-sample" class="section level2">
+<h2>In Sample Versus Out of Sample</h2>
+<p><strong>In Sample Error:</strong> The error rate you get on the same dataset you used to build your predictor. Sometimes called resubstitution error.</p>
+<p><strong>Out of Sample Error:</strong> The error rate you get on a new dataset. Sometimes called generalization error.</p>
+<p><strong>Key ideas</strong></p>
+<ol style="list-style-type: decimal">
+<li>Out of sample error is what you care about</li>
+<li>In sample error &lt; out of sample error</li>
+<li>The reason is overfitting
+<ul>
+<li>Matching your algorithm to the data you have</li>
+</ul></li>
+</ol>
+<hr />
+</div>
+<div id="in-sample-versus-out-of-sample-errors" class="section level2">
+<h2>In Sample Versus Out of Sample Errors</h2>
+<pre class="r"><code>library(kernlab)
+data(spam)
+set.seed(333)
+smallSpam &lt;- spam[sample(dim(spam)[1], size=10),]
+spamLabel &lt;- (smallSpam$type==&quot;spam&quot;) * 1 + 1
+plot(smallSpam$capitalAve, col=spamLabel)</code></pre>
+<div class="rimage center">
+<img src="data:image/png;base64,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" title alt class="plot" />
+</div>
+<hr />
+</div>
+<div id="prediction-rule-1" class="section level2">
+<h2>Prediction Rule 1</h2>
+<ul>
+<li><code>capitalAve</code> &gt; 2.7 = “spam”</li>
+<li><code>capitalAve</code> &lt; 2.40 = “nonspam”</li>
+<li><code>capitalAve</code> between 2.40 and 2.45 = “spam”</li>
+<li><code>capitalAve</code> between 2.45 and 2.7 = “nonspam”</li>
+</ul>
+<hr />
+</div>
+<div id="apply-rule-1-to-smallspam" class="section level2">
+<h2>Apply Rule 1 to <code>smallSpam</code></h2>
+<pre class="r"><code>rule1 &lt;- function(x) {
+    prediction &lt;- rep(NA, length(x))
+    prediction[x &gt; 2.7] &lt;- &quot;spam&quot;
+    prediction[x &lt; 2.40] &lt;- &quot;nonspam&quot;
+    prediction[(x &gt;= 2.40 &amp; x &lt;= 2.45)] &lt;- &quot;spam&quot;
+    prediction[(x &gt; 2.45 &amp; x &lt;= 2.70)] &lt;- &quot;nonspam&quot;
+    return(prediction)
+}
+table(rule1(smallSpam$capitalAve), smallSpam$type)</code></pre>
+<pre><code>         
+          nonspam spam
+  nonspam       5    0
+  spam          0    5</code></pre>
+<hr />
+</div>
+<div id="prediction-rule-2" class="section level2">
+<h2>Prediction Rule 2</h2>
+<ul>
+<li><code>capitalAve</code> &gt; 2.80 = “spam”</li>
+<li><code>capitalAve</code> <span class="math inline">\(\le\)</span> 2.80 = “nonspam”</li>
+</ul>
+<hr />
+</div>
+<div id="apply-rule-1-to-smallspam-1" class="section level2">
+<h2>Apply Rule 1 to <code>smallSpam</code></h2>
+<pre class="r"><code>rule2 &lt;- function(x) {
+    prediction &lt;- rep(NA, length(x))
+    prediction[x &gt; 2.8] &lt;- &quot;spam&quot;
+    prediction[x &lt;= 2.8] &lt;- &quot;nonspam&quot;
+    return(prediction)
+}
+table(rule2(smallSpam$capitalAve), smallSpam$type)</code></pre>
+<pre><code>         
+          nonspam spam
+  nonspam       5    1
+  spam          0    4</code></pre>
+<hr />
+</div>
+<div id="apply-to-complete-spam-data" class="section level2">
+<h2>Apply to Complete Spam Data</h2>
+<pre class="r"><code>table(rule1(spam$capitalAve), spam$type)</code></pre>
+<pre><code>         
+          nonspam spam
+  nonspam    2141  588
+  spam        647 1225</code></pre>
+<pre class="r"><code>table(rule2(spam$capitalAve), spam$type)</code></pre>
+<pre><code>         
+          nonspam spam
+  nonspam    2224  642
+  spam        564 1171</code></pre>
+<pre class="r"><code>mean(rule1(spam$capitalAve)==spam$type)</code></pre>
+<pre><code>[1] 0.7315801</code></pre>
+<pre class="r"><code>mean(rule2(spam$capitalAve)==spam$type)</code></pre>
+<pre><code>[1] 0.7378831</code></pre>
+<hr />
+</div>
+<div id="look-at-accuracy" class="section level2">
+<h2>Look at Accuracy</h2>
+<pre class="r"><code>sum(rule1(spam$capitalAve)==spam$type)</code></pre>
+<pre><code>[1] 3366</code></pre>
+<pre class="r"><code>sum(rule2(spam$capitalAve)==spam$type)</code></pre>
+<pre><code>[1] 3395</code></pre>
+<hr />
+</div>
+<div id="whats-going-on" class="section level2">
+<h2>What’s going on?</h2>
+<p><strong>Overfitting</strong></p>
+<ul>
+<li>Data have two parts
+<ul>
+<li>Signal</li>
+<li>Noise</li>
+</ul></li>
+<li>The goal of a predictor is to find signal</li>
+<li>You can always design a perfect in-sample predictor</li>
+<li>You capture both signal + noise when you do that</li>
+<li>Predictor won’t perform as well on new samples</li>
+</ul>
+<p><a href="http://en.wikipedia.org/wiki/Overfitting" class="uri">http://en.wikipedia.org/wiki/Overfitting</a></p>
+</div>
 
 
 </div>
