@@ -20,3 +20,136 @@ knit_hooks$set(inline=function(x) {
 })
 knit_hooks$set(plot=knitr:::hook_plot_html)
 ```
+
+## The Central Dogma of Prediction
+
+![](dogma.JPG)
+
+---
+
+## What Can Go Wrong?
+
+![](googleflu.JPG)
+
+[http://www.sciencemag.org/content/343/6176/1203.full.pdf](http://www.sciencemag.org/content/343/6176/1203.full.pdf)
+
+---
+
+## Components of a Predictor
+
+![](components1.JPG)
+
+---
+
+## SPAM Example
+
+![](components2.JPG)
+
+**Start with a general question**
+
+Can I automatically detect emails that are SPAM and that are not?
+
+**Make it concrete**
+
+Can I use quantitative characteristics of the emails to classify them as SPAM/HAM?
+
+---
+
+## SPAM Example
+
+![](components3.JPG)
+
+[http://rss.acs.unt.edu/Rdoc/library/kernlab/html/spam.html](http://rss.acs.unt.edu/Rdoc/library/kernlab/html/spam.html)
+
+---
+
+## SPAM Example
+
+![](components4.JPG)
+
+**Dear Jeff,**
+
+**Can you send me your address so I can send you the invitation?**
+
+**Thanks,**
+
+**Ben**
+
+---
+
+## SPAM Example
+
+![](components4.JPG)
+
+**Dear Jeff,**
+
+**Can you send me your address so I can send you the invitation?**
+
+**Thanks,**
+
+**Ben**
+
+Frequency of you = 2/17 = 0.118
+
+---
+
+## SPAM Example
+
+![](components4.JPG)
+
+```{r}
+library(kernlab)
+data(spam)
+head(spam)
+```
+
+---
+
+## SPAM Example
+
+![](components5.JPG)
+
+```{r}
+plot(density(spam$your[spam$type=="nonspam"]),
+     col="blue", main="", xlab="Frequency of 'your'")
+lines(density(spam$your[spam$type=="spam"]), col="red")
+```
+
+---
+
+## SPAM Example
+
+![](components5.JPG)
+
+**Our algorithm**
+
+- Find the value _C_
+- **Frequency of 'your' > C** predict "spam"
+
+---
+
+## SPAM Example
+
+![](components6.JPG)
+
+```{r}
+plot(density(spam$your[spam$type=="nonspam"]),
+     col="blue", main="", xlab="Frequency of 'your'")
+lines(density(spam$your[spam$type=="spam"]), col="red")
+abline(v=0.5, col="black")
+```
+
+---
+
+## SPAM Example
+
+![](components7.JPG)
+
+```{r}
+prediction <- ifelse(spam$your > 0.5, "spam", "nospam")
+table(prediction, spam$type) / length(spam$type)
+```
+
+Accuracy $\approx 0.459 + 0.292 = 0.751$
+
+---
