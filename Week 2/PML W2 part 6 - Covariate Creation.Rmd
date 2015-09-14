@@ -20,3 +20,121 @@ knit_hooks$set(inline=function(x) {
 })
 knit_hooks$set(plot=knitr:::hook_plot_html)
 ```
+
+## Two Levels of Covariate Creation
+
+**Level 1: From raw data to covariate**
+
+![](covariate1.JPG)
+
+**Level 2: Transforming tidy covariates**
+
+```{r}
+library(kernlab)
+data(spam)
+spam$capitalAveSq <- spam$capitalAve^2
+```
+
+---
+
+## Level 1: Raw Data -> Covariates
+
+- Depends heavily on application
+- The balancing act is summarization vs. information loss
+- Examples
+    - Text files: frequency of words, frequency of phrases ([Google ngrams](https://books.google.com/ngrams)), frequency of capital letters
+    - Images: Edges, corners, blobs, ridges ([computer vision feature detection](https://en.wikipedia.org/wiki/Feature_detection_(computer_vision))
+    - Webpages: Number and type of images, position of elements, colors, videos ([A/B Testing](https://en.wikipedia.org/wiki/A/B_testing))
+    - People: Height, weight, hair color, sex, country of origin
+- The more knowledge of the system you have the better the job you will do
+- When in doubt, err on the side of more features
+- Can be automated, but use caution!
+
+---
+
+## Level 2: Tidy Covariates -> New Covariates
+
+- More necessary for some methods (regression, svms) than for others (classification trees)
+- Should be done _only on the training set_
+- The best approach is through exploratory analysis (plotting/tables)
+- New covariates should be added to dataframes
+
+---
+
+## Load Example Data
+
+```{r}
+library(ISLR)
+library(caret)
+data(Wage)
+inTrain <- createDataPartition(y=Wage$wage, p=0.7, list=F)
+training <- Wage[inTrain,]
+testing <- Wage[-inTrain,]
+```
+
+---
+
+## Common Covariates to Add, Dummy Variables
+
+**Basic idea -- convert factor variables to [indicator variables](https://en.wikipedia.org/wiki/Dummy_variable_(statistics))**
+
+```{r}
+table(training$jobclass)
+dummies <- dummyVars(wage ~ jobclass, training)
+head(predict(dummies, newdata=training))
+```
+
+---
+
+## Removing Near-Zero Variance Covariates
+
+```{r}
+nsv <- nearZeroVar(training, saveMetrics=T)
+nsv
+```
+
+---
+
+## Spline Basis
+
+```{r}
+library(splines)
+bsBasis <- bs(training$age, df=3)
+bsBasis
+```
+
+---
+
+## Fitting Curves with Splines
+
+```{r}
+lm1 <- lm(wage ~ bsBasis, training)
+plot(training$age, training$wage, pch=19, cex=0.5)
+points(training$age, predict(lm1, newdata=training), col="red", pch=19, cex=0.5)
+```
+
+---
+
+## Splines on the Test Set
+
+```{r}
+predict(bsBasis, age=testing$age)
+```
+
+---
+
+## Notes and Further Reading
+
+- Level 1 feature creation (raw data to covariates)
+    - Science is key. Google "feature extraction for [data type]"
+    - Err on overcreation of features
+    - In some applications (images, voices) automated feature creation is possible/necessary
+    - [http://www.cs.nyu.edu/~yann/talks/lecun-ranzato-icml2013.pdf](http://www.cs.nyu.edu/~yann/talks/lecun-ranzato-icml2013.pdf)
+- Level 2 feature creation (covariates to new covariates)
+    - The function `preProcess` in `caret` will handle some preprocessing
+    - Create new covariates if you think they will improve fit
+    - Use exploratory analysis on the training set for creating them
+    - Be careful about overfitting!
+- [Preprocessing with caret](https://topepo.github.io/caret/preprocess.html)
+- If you want to fit spline models, use the `gam` method in the `caret` package which allows smoothing of multiple variables
+- More on feature creation/data tidying in the Obtaining Data course from the Data Science course specialization
