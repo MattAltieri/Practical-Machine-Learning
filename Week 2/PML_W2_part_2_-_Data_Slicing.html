@@ -70,7 +70,80 @@ img {
 </div>
 
 
-
+<div id="spam-example-data-splitting" class="section level2">
+<h2>SPAM Example: Data Splitting</h2>
+<pre class="r"><code>library(caret)
+library(kernlab)
+data(spam)
+inTrain &lt;- createDataPartition(y=spam$type, p=0.75, list=F)
+training &lt;- spam[inTrain,]
+testing &lt;- spam[-inTrain,]
+dim(training)</code></pre>
+<pre><code>[1] 3451   58</code></pre>
+<hr />
+</div>
+<div id="spam-example-k-fold" class="section level2">
+<h2>SPAM Example: K-fold</h2>
+<pre class="r"><code>set.seed(32323)
+folds &lt;- createFolds(y=spam$type, k=10, list=T, returnTrain=T)
+sapply(folds, length)</code></pre>
+<pre><code>Fold01 Fold02 Fold03 Fold04 Fold05 Fold06 Fold07 Fold08 Fold09 Fold10 
+  4141   4140   4141   4142   4140   4142   4141   4141   4140   4141 </code></pre>
+<pre class="r"><code>folds[[1]][1:10]</code></pre>
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<hr />
+</div>
+<div id="spam-example-return-test" class="section level2">
+<h2>SPAM Example: Return Test</h2>
+<pre class="r"><code>set.seed(32323)
+folds &lt;- createFolds(y=spam$type, k=10, list=T, returnTrain=F)
+sapply(folds, length)</code></pre>
+<pre><code>Fold01 Fold02 Fold03 Fold04 Fold05 Fold06 Fold07 Fold08 Fold09 Fold10 
+   460    461    460    459    461    459    460    460    461    460 </code></pre>
+<pre class="r"><code>folds[[1]][1:10]</code></pre>
+<pre><code> [1] 24 27 32 40 41 43 55 58 63 68</code></pre>
+<hr />
+</div>
+<div id="spam-example-resampling" class="section level2">
+<h2>SPAM Example: Resampling</h2>
+<pre class="r"><code>set.seed(32323)
+folds &lt;- createResample(y=spam$type, times=10, list=T)
+sapply(folds, length)</code></pre>
+<pre><code>Resample01 Resample02 Resample03 Resample04 Resample05 Resample06 Resample07 Resample08 Resample09 
+      4601       4601       4601       4601       4601       4601       4601       4601       4601 
+Resample10 
+      4601 </code></pre>
+<pre class="r"><code>folds[[1]][1:10]</code></pre>
+<pre><code> [1]  1  2  3  3  3  5  5  7  8 12</code></pre>
+<hr />
+</div>
+<div id="spam-example-time-slices" class="section level2">
+<h2>SPAM Example: Time Slices</h2>
+<pre class="r"><code>set.seed(32323)
+tme &lt;- 1:1000
+folds &lt;- createTimeSlices(y=tme, initialWindow=20, horizon=10)
+names(folds)</code></pre>
+<pre><code>[1] &quot;train&quot; &quot;test&quot; </code></pre>
+<pre class="r"><code>folds$train[[1]]</code></pre>
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20</code></pre>
+<pre class="r"><code>folds$test[[1]]</code></pre>
+<pre><code> [1] 21 22 23 24 25 26 27 28 29 30</code></pre>
+<hr />
+</div>
+<div id="further-information" class="section level2">
+<h2>Further Information</h2>
+<ul>
+<li>Caret tutorials
+<ul>
+<li><a href="http://www.edii.uclm.es/~useR-2013/Tutorials/kuhn/user_caret_2up.pdf" class="uri">http://www.edii.uclm.es/~useR-2013/Tutorials/kuhn/user_caret_2up.pdf</a></li>
+<li><a href="http://cran.r-project.org/web/packages/caret/vignettes/caret.pdf" class="uri">http://cran.r-project.org/web/packages/caret/vignettes/caret.pdf</a></li>
+</ul></li>
+<li>A paper introducting the caret package
+<ul>
+<li><a href="http://www.jstatsoft.org/v28/i05/paper" class="uri">http://www.jstatsoft.org/v28/i05/paper</a></li>
+</ul></li>
+</ul>
+</div>
 
 
 </div>

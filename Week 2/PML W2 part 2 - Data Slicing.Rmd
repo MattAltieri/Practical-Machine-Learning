@@ -20,3 +20,71 @@ knit_hooks$set(inline=function(x) {
 })
 knit_hooks$set(plot=knitr:::hook_plot_html)
 ```
+
+## SPAM Example: Data Splitting
+
+```{r}
+library(caret)
+library(kernlab)
+data(spam)
+inTrain <- createDataPartition(y=spam$type, p=0.75, list=F)
+training <- spam[inTrain,]
+testing <- spam[-inTrain,]
+dim(training)
+```
+
+---
+
+## SPAM Example: K-fold
+
+```{r}
+set.seed(32323)
+folds <- createFolds(y=spam$type, k=10, list=T, returnTrain=T)
+sapply(folds, length)
+folds[[1]][1:10]
+```
+
+---
+
+## SPAM Example: Return Test
+
+```{r}
+set.seed(32323)
+folds <- createFolds(y=spam$type, k=10, list=T, returnTrain=F)
+sapply(folds, length)
+folds[[1]][1:10]
+```
+
+---
+
+## SPAM Example: Resampling
+
+```{r}
+set.seed(32323)
+folds <- createResample(y=spam$type, times=10, list=T)
+sapply(folds, length)
+folds[[1]][1:10]
+```
+
+---
+
+## SPAM Example: Time Slices
+
+```{r}
+set.seed(32323)
+tme <- 1:1000
+folds <- createTimeSlices(y=tme, initialWindow=20, horizon=10)
+names(folds)
+folds$train[[1]]
+folds$test[[1]]
+```
+
+---
+
+## Further Information
+
+- Caret tutorials
+    - [http://www.edii.uclm.es/~useR-2013/Tutorials/kuhn/user_caret_2up.pdf](http://www.edii.uclm.es/~useR-2013/Tutorials/kuhn/user_caret_2up.pdf)
+    - [http://cran.r-project.org/web/packages/caret/vignettes/caret.pdf](http://cran.r-project.org/web/packages/caret/vignettes/caret.pdf)
+- A paper introducting the caret package
+    - [http://www.jstatsoft.org/v28/i05/paper](http://www.jstatsoft.org/v28/i05/paper)
