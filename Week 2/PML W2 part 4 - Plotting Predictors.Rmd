@@ -20,3 +20,131 @@ knit_hooks$set(inline=function(x) {
 })
 knit_hooks$set(plot=knitr:::hook_plot_html)
 ```
+
+## Example: Predicting Wages
+
+![](wages.JPG)
+
+Image Credit [http://www.cahs-media.org/the-high-cost-of-low-wages](http://www.cahs-media.org/the-high-cost-of-low-wages)
+
+Data from: [ISLR package](https://cran.r-project.org/web/packages/ISLR/) from the book: [Introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/)
+
+---
+
+## Example: Wage Data
+
+```{r}
+library(ISLR)
+library(ggplot2)
+library(caret)
+data(Wage)
+summary(Wage)
+```
+
+---
+
+## Get Training / Test Sets
+
+```{r}
+inTrain <- createDataPartition(y=Wage$wage, p=0.7, list=F)
+training <- Wage[inTrain,]
+testing <- Wage[-inTrain,]
+dim(training)
+dim(testing)
+```
+
+---
+
+## Feature Plot (`caret` Package)
+
+```{r}
+featurePlot(x=training[,c("age","education","jobclass")],
+            y=training$wage,
+            plot="pairs")
+```
+
+---
+
+## Qplot (`ggplot2` Package)
+
+```{r}
+qplot(age, wage, data=training)
+```
+
+---
+
+## Qplot with Color (`ggplot2` Package)
+
+```{r}
+qplot(age, wage, color=jobclass, data=training)
+```
+
+---
+
+## Add Regression Smoothers (`ggplot` Package)
+
+```{r}
+qq <- qplot(age, wage, color=education, data=training)
+qq + geom_smooth(method="lm", formula=y ~ x)
+```
+
+---
+
+## `cut2`, Making Factors (`hmisc` package)
+
+```{r}
+library(Hmisc)
+cutWage <- cut2(training$wage, g=3)
+table(cutWage)
+```
+
+---
+
+## Boxplots with `cut2`
+
+```{r}
+p1 <- qplot(cutWage, age, data=training, fill=cutWage, geom=c("boxplot"))
+p1
+```
+
+---
+
+## Boxplots with Points Overlayed
+
+```{r}
+library(gridExtra)
+p2 <- qplot(cutWage, age, data=training, fill=cutWage, geom=c("boxplot","jitter"))
+grid.arrange(p1, p2, ncol=2)
+```
+
+---
+
+## Tables
+
+```{r}
+t1 <- table(cutWage, training$jobclass)
+t1
+prop.table(t1, 1)
+```
+
+---
+
+## Density Plots
+
+```{r}
+qplot(wage, color=education, data=training, geom="density")
+```
+
+---
+
+## Notes and Further Reading
+
+- Make your plots only in the training set
+    - Don't use the test set for exploration!
+- Things you should be looking for
+    - Imbalance in outcomes / predictors
+    - Outliers
+    - Groups of points not explained by a predictor
+    - Skewed variables
+- [ggplot2 tutorial](http://rstudio-pubs-static.s3.amazonaws.com/2176_75884214fc524dc0bc2a140573da38bb.html)
+- [caret visializations](https://topepo.github.io/caret/visualizations.html)
