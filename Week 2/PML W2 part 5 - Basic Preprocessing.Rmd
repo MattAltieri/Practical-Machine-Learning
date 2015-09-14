@@ -20,3 +20,131 @@ knit_hooks$set(inline=function(x) {
 })
 knit_hooks$set(plot=knitr:::hook_plot_html)
 ```
+
+## Why Preprocess?
+
+```{r}
+library(caret)
+library(kernlab)
+data(spam)
+inTrain <- createDataPartition(y=spam$type, p=0.75, list=F)
+training <- spam[inTrain,]
+testing <- spam[-inTrain,]
+hist(training$capitalAve, main="", xlab="ave. capital run length")
+```
+
+---
+
+## Why Preprocess?
+
+```{r}
+mean(training$capitalAve)
+sd(training$capitalAve)
+```
+
+---
+
+## Standardizing
+
+```{r}
+trainCapAve <- training$capitalAve
+trainCapAveS <- (trainCapAve - mean(trainCapAve)) / sd(trainCapAve)
+mean(trainCapAveS)
+sd(trainCapAveS)
+```
+
+---
+
+## Standardizing - Test Set
+
+```{r}
+testCapAve <- testing$capitalAve
+testCapAveS <- (testCapAve - mean(trainCapAve)) / sd(trainCapAve)
+mean(testCapAveS)
+sd(testCapAveS)
+```
+
+---
+
+## Standardizing - `preProcess` Function
+
+```{r}
+preObj <- preProcess(training[,-58], method=c("center","scale"))
+trainCapAveS <- predict(preObj, training[,-58])$capitalAve
+mean(trainCapAveS)
+sd(trainCapAveS)
+```
+
+---
+
+## Standardizing - `preProcess` Function
+
+```{r}
+testCapAveS <- predict(preObj, testing[,-58])$capitalAve
+mean(testCapAveS)
+sd(testCapAveS)
+```
+
+---
+
+## Standardizing - `preProcess` Argument
+
+```{r}
+set.seed(32343)
+modelFit <- train(type ~ ., training, preProcess=c("center","scale"),
+                  method="glm")
+modelFit
+```
+
+---
+
+## Standardizing - Box-Cox Transforms
+
+```{r}
+preObj <- preProcess(training[,-58], method=c("BoxCox"))
+trainCapAveS <- predict(preObj, training[,-58])$capitalAve
+par(mfrow=c(1,2))
+hist(trainCapAveS)
+qqnorm(trainCapAveS)
+```
+
+---
+
+## Standardizing - Imputing Data
+
+```{r}
+set.seed(13343)
+
+# Make some values NA
+training$capAve <- training$capitalAve
+selectNA <- rbinom(dim(training)[1], size=1, prob=0.05)==1
+training$capAve[selectNA] <- NA
+
+## Impute and standardize
+preObj <- preProcess(training[,-58], method="knnImpute")
+capAve <- predict(preObj, training[,-58])$capAve
+
+## Standardize true values
+capAveTruth <- training$capitalAve
+capAveTruth <- (capAveTruth - mean(capAveTruth)) / sd(capAveTruth)
+```
+
+---
+
+## Standardizing - Imputing Data
+
+```{r}
+quantile(capAve - capAveTruth)
+quantile((capAve - capAveTruth)[selectNA])
+quantile((capAve - capAveTruth)[!selectNA])
+```
+
+---
+
+## Notes and Further Reading
+
+- Training and test must be processed in the same way
+- Test transformations will likely be imperfect
+    - Especially if the test / training sets were collected at different times
+- Careful when trainsforming factor variables!
+- [Preprocessing with caret](https://topepo.github.io/caret/preprocess.html)
