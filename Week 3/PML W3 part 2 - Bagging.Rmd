@@ -20,3 +20,124 @@ knit_hooks$set(inline=function(x) {
 })
 knit_hooks$set(plot=knitr:::hook_plot_html)
 ```
+
+## Bootstrap Aggregating (Bagging)
+
+**Basic Idea:**
+
+1. Resample cases and recalculate predictions
+2. Average or majority vote
+
+**Notes**
+
+- Similar bias
+- Reduced variance
+- More useful for nonlinear functions
+
+---
+
+## Ozone Data
+
+```{r}
+library(ElemStatLearn)
+library(caret)
+data(ozone, package="ElemStatLearn")
+ozone <- ozone[order(ozone$ozone),]
+head(ozone)
+```
+
+[http://en.wikipedia.org/wiki/Bootstrap_aggregating](http://en.wikipedia.org/wiki/Bootstrap_aggregating)
+
+---
+
+## Bagged Loess
+
+```{r}
+ll <- matrix(NA, nrow=10, ncol=155)
+for(i in 1:10) {
+    ss <- sample(1:dim(ozone)[1], replace=T)
+    ozone0 <- ozone[ss,]
+    ozone0 <- ozone0[order(ozone0$ozone),]
+    loess0 <- loess(temperature ~ ozone, ozone0, span=0.2)
+    ll[i,] <- predict(loess0, data.frame(ozone=1:155))
+}
+plot(ozone$ozone, ozone$temperature, pch=19, cex=0.5)
+for(i in 1:10) {lines(1:155, ll[i,], col="grey", lwd=2)}
+lines(1:155, apply(ll, 2, mean), col="red", lwd=2)
+```
+
+---
+
+## Bagging in `caret`
+
+- Some models perform bagging for you, in `train` function consider `method` options:
+    - `bagEarth`
+    - `treebag`
+    - `bagFDA`
+- Alternatively you can bag any model you choose using the `bag` function
+
+---
+
+## More Bagging in `caret`
+
+```{r}
+predictors <- data.frame(ozone=ozone$ozone)
+temperature <- ozone$temperature
+treebag <- bag(predictors, temperature, B=10,
+               bagControl=bagControl(fit=ctreeBag$fit,
+                                     predict=ctreeBag$pred,
+                                     aggregate=ctreeBag$aggregate))
+```
+
+[http://www.inside-r.org/packages/cran/caret/docs/nbBag](http://www.inside-r.org/packages/cran/caret/docs/nbBag)
+
+---
+
+## Example of Custom Bagging (cont...)
+
+```{r}
+plot(ozone$ozone, temperature, col="lightgrey", pch=19)
+points(ozone$ozone, predict(treebag$fits[[1]]$fit, predictors), pch=19,
+       col="red")
+points(ozone$ozone, predict(treebag, predictors), pch=19, col="blue")
+```
+
+---
+
+## Parts of Bagging
+
+```{r}
+ctreeBag$fit
+```
+
+---
+
+## Parts of Bagging
+
+```{r}
+ctreeBag$pred
+```
+
+---
+
+## Parts of Bagging
+
+```{r}
+ctreeBag$aggregate
+```
+
+---
+
+## Notes and Further Resources
+
+**Notes**
+
+- Bagging is most useful for nonlinear models
+- Often used with trees -- an extension is random forests
+- Several models use bagging in caret's `train` function
+
+**Further Resources:**
+
+- [Bagging](https://en.wikipedia.org/wiki/Bootstrap_aggregating)
+- [Bagging and Boosting](https://stat.ethz.ch/education/semesters/FS_2008/CompStat/sk-ch8.pdf)
+- [Elements of Statistical Learning](http://statweb.stanford.edu/~tibs/ElemStatLearn/)
