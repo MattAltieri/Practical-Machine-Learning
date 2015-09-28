@@ -158,7 +158,7 @@ sqrt(sum((pred1 - testing$wage)^2))
 ```
 
 ```
-[1] 1143.419
+[1] 1245.059
 ```
 
 ```r
@@ -166,7 +166,7 @@ sqrt(sum((pred2 - testing$wage)^2))
 ```
 
 ```
-[1] 1173.376
+[1] 1292.868
 ```
 
 ```r
@@ -174,7 +174,7 @@ sqrt(sum((combPred - testing$wage)^2))
 ```
 
 ```
-[1] 991.8219
+[1] 1063.427
 ```
 
 ---
@@ -199,7 +199,7 @@ sqrt(sum((pred1V - validation$wage)^2))
 ```
 
 ```
-[1] 1553.432
+[1] 1424.423
 ```
 
 ```r
@@ -207,7 +207,7 @@ sqrt(sum((pred2V - validation$wage)^2))
 ```
 
 ```
-[1] 1573.247
+[1] 1462.286
 ```
 
 ```r
@@ -215,7 +215,7 @@ sqrt(sum((combPredV - validation$wage)^2))
 ```
 
 ```
-[1] 1315.753
+[1] 1243.835
 ```
 
 ---
@@ -239,4 +239,4 @@ sqrt(sum((combPredV - validation$wage)^2))
 
 [http://www.techdirt.com/blog/innovation/articles/20120409/03412518422/](http://www.techdirt.com/blog/innovation/articles/20120409/03412518422/)
 
-[http://techblog.netflix.com/2012/04/netflix-recommendations-beyond-5-stars.html](http://techblog.netflix.com/2012/04/netflix-recommendations-beyond-5-stars.html)
+[http://techblog.netflix.com/2012/04/netflix-recommendations-beyond-5-stars.html](http://techblog.netflix.com/2012/04/netflix-recommendations-beyond-5-stars.html) 

@@ -183,11 +183,11 @@ combPred &lt;- predict(combModFit, predDF)</code></pre>
 <div id="testing-errors" class="section level2">
 <h2>Testing Errors</h2>
 <pre class="r"><code>sqrt(sum((pred1 - testing$wage)^2))</code></pre>
-<pre><code>[1] 1143.419</code></pre>
+<pre><code>[1] 1245.059</code></pre>
 <pre class="r"><code>sqrt(sum((pred2 - testing$wage)^2))</code></pre>
-<pre><code>[1] 1173.376</code></pre>
+<pre><code>[1] 1292.868</code></pre>
 <pre class="r"><code>sqrt(sum((combPred - testing$wage)^2))</code></pre>
-<pre><code>[1] 991.8219</code></pre>
+<pre><code>[1] 1063.427</code></pre>
 <hr />
 </div>
 <div id="predict-on-validation-dataset" class="section level2">
@@ -201,11 +201,11 @@ combPredV &lt;- predict(combModFit, predVDF)</code></pre>
 <div id="evaluate-on-validation" class="section level2">
 <h2>Evaluate on Validation</h2>
 <pre class="r"><code>sqrt(sum((pred1V - validation$wage)^2))</code></pre>
-<pre><code>[1] 1553.432</code></pre>
+<pre><code>[1] 1424.423</code></pre>
 <pre class="r"><code>sqrt(sum((pred2V - validation$wage)^2))</code></pre>
-<pre><code>[1] 1573.247</code></pre>
+<pre><code>[1] 1462.286</code></pre>
 <pre class="r"><code>sqrt(sum((combPredV - validation$wage)^2))</code></pre>
-<pre><code>[1] 1315.753</code></pre>
+<pre><code>[1] 1243.835</code></pre>
 <hr />
 </div>
 <div id="notes-and-further-resources" class="section level2">
