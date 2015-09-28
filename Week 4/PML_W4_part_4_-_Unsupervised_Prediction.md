@@ -64,9 +64,9 @@ table(k.means1$cluster, iris.train$Species)
 ```
    
     setosa versicolor virginica
-  1     35          0         0
-  2      0          2        26
-  3      0         33         9
+  1      0          2        24
+  2      0         33        11
+  3     35          0         0
 ```
 
 ---
@@ -82,9 +82,9 @@ table(predict(fit, iris.train), iris.train$Species)
 ```
    
     setosa versicolor virginica
-  1     35          0         0
-  2      0          0        24
-  3      0         35        11
+  1      0          0        23
+  2      0         35        12
+  3     35          0         0
 ```
 
 ---
@@ -100,9 +100,9 @@ table(test.cluster.pred, iris.test$Species)
 ```
                  
 test.cluster.pred setosa versicolor virginica
-                1     15          0         0
-                2      0          0        10
-                3      0         15         5
+                1      0          0        11
+                2      0         15         4
+                3     15          0         0
 ```
 
 ---
@@ -113,4 +113,4 @@ test.cluster.pred setosa versicolor virginica
 - Beware over-interpretation of clusters!
 - This is one basic approach to [recommendation engines](https://en.wikipedia.org/wiki/Recommender_system)
 - [Elements of Statistical Learning](http://www-stat.stanford.edu/~tibs/ElemStatLearn/)
-- [Introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/)
+- [Introduction to Statistical Learning](http://www-bcf.usc.edu/~gareth/ISL/) 
