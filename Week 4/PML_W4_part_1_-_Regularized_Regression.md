@@ -202,7 +202,7 @@ Inclusion of $\lambda$ makes the problem non-singular even if $X^T X$ is not inv
 ## Tuning Parameter $\lambda$
 
 - $\lambda$ controls the size of the coefficients
-- $\lambda$ controls the about of {bf regularization}
+- $\lambda$ controls the about of regularization
 - As $\lambda \rightarrow 0$ we obtain the least square solution
 - As $\lambda \rightarrow \infty$ we have $\hat \beta_{\lambda=\infty}^{ridge} = 0$
 
