@@ -15,3 +15,5 @@ vignettes/*.pdf
 */.RData
 */.Rhistory
 */data/
+.cache/
+*/.cache/
