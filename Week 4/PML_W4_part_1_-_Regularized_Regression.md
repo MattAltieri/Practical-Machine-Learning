@@ -170,3 +170,70 @@ where _PRSS_ is a penalized form of the sum of squares. Things that are commonly
 - Penalty respects structure of the problem
 
 ---
+
+## Ridge Regression
+
+Solve:
+
+$$\sum_{i=1}^N\left(y_i - \beta_0 + \sum_{j=1}^p x_{ij}\beta_j\right)^2 + \lambda \sum_{j=1}^p \beta_j^2$$
+
+equivalent to solving
+
+$\sum_{i=1}^N \left(y_i - \beta_0 + \sum_{j=1}^p x_{ij}\beta_j\right)^2$ subject to $\sum_{j=1}^p \beta_j^2 \le s$ where $s$ is inversely proportional to $\lambda$
+
+Inclusion of $\lambda$ makes the problem non-singular even if $X^T X$ is not invertible
+
+[http://www.biostat.jhsph.edu/~ririzarr/Teaching/649/](http://www.biostat.jhsph.edu/~ririzarr/Teaching/649/)
+
+[http://www.cbcb.umd.edu/~hcorrada/PracticalML/](http://www.cbcb.umd.edu/~hcorrada/PracticalML/)
+
+---
+
+## Ridge Coefficient Paths
+
+![](ridge1.JPG)
+
+[http://www.biostat.jhsph.edu/~ririzarr/Teaching/649/](http://www.biostat.jhsph.edu/~ririzarr/Teaching/649/)
+
+[http://www.cbcb.umd.edu/~hcorrada/PracticalML/](http://www.cbcb.umd.edu/~hcorrada/PracticalML/)
+
+---
+
+## Tuning Parameter $\lambda$
+
+- $\lambda$ controls the size of the coefficients
+- $\lambda$ controls the about of {bf regularization}
+- As $\lambda \rightarrow 0$ we obtain the least square solution
+- As $\lambda \rightarrow \infty$ we have $\hat \beta_{\lambda=\infty}^{ridge} = 0$
+
+---
+
+## Lasso
+
+$\sum_{i=1}^N \left(y_i - \beta_0 + \sum_{j=1}^p x_{ij} \beta_j\right)^2$ subject to $\sum_{j=1}^p |\beta_j| \le s$
+
+also has a lagrangian form
+
+$$\sum_{i=1}^N\left(y_i - \beta_0 + \sum_{j=1}^p x_{ij}\beta_j\right)^2 + \lambda\sum_{j=1}^p |\beta_j|$$
+
+For orthonormal design matrices (not the norm!) this has a closed form solutions
+
+$$\hat \beta_j = sign(\hat \beta_j^0)(|\hat \beta_j^0| - \gamma)^+$$
+
+but not in general.
+
+[http://www.biostat.jhsph.edu/~ririzarr/Teaching/649/](http://www.biostat.jhsph.edu/~ririzarr/Teaching/649/)
+
+[http://www.cbcb.umd.edu/~hcorrada/PracticalML/](http://www.cbcb.umd.edu/~hcorrada/PracticalML/)
+
+---
+
+## Notes and Further Reading
+
+- [Hector Corrado Bravo's Practical Machine Learning lecture notes](http://www.cbcb.umd.edu/~hcorrada/PracticalML/)
+- [Hector's penalized regression reading list](http://www.cbcb.umd.edu/~hcorrada/AMSC689.html#readings)
+- [Elements of Statistical Learning](http://statweb.stanford.edu/~tibs/ElemStatLearn/)
+- In `caret` methods are:
+    - `ridge`
+    - `lasso`
+    - `relaxo`
