@@ -183,4 +183,4 @@ accuracy(fcast, ts1Test)
     - Be wary of spurious correlations
     - Be careful how far you predict (extrapolation)
     - Be wary of dependencies over time
-- See [quantmod](https://cran.r-project.org/web/packages/quantmod/quantmod.pdf) or [quandl](https://www.quandl.com/help/packages/r) packages for finance-related problems
+- See [quantmod](https://cran.r-project.org/web/packages/quantmod/quantmod.pdf) or [quandl](https://www.quandl.com/help/packages/r) packages for finance-related problems 
