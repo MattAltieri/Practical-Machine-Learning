@@ -70,7 +70,89 @@ img {
 </div>
 
 
-
+<div id="key-ideas" class="section level2">
+<h2>Key Ideas</h2>
+<ul>
+<li>Sometimes you don’t know the labels for prediction</li>
+<li>To build a predictor
+<ul>
+<li>Create clusters</li>
+<li>Name clusters</li>
+<li>Build predictor for clusters</li>
+</ul></li>
+<li>In a new dataset
+<ul>
+<li>Predict clusters</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+<div id="iris-example-ignoring-species-labels" class="section level2">
+<h2><code>iris</code> Example Ignoring Species Labels</h2>
+<pre class="r"><code>data(iris)
+library(ggplot2)
+library(caret)
+train.flags &lt;- createDataPartition(y=iris$Species, p=0.7, list=F)
+iris.train &lt;- iris[train.flags,]
+iris.test &lt;- iris[-train.flags,]
+dim(iris.train)</code></pre>
+<pre><code>[1] 105   5</code></pre>
+<pre class="r"><code>dim(iris.test)</code></pre>
+<pre><code>[1] 45  5</code></pre>
+<hr />
+</div>
+<div id="cluster-with-k-means" class="section level2">
+<h2>Cluster with k-means</h2>
+<pre class="r"><code>k.means1 &lt;- kmeans(subset(iris.train, select=-c(Species)), centers=3)
+iris.train$clusters &lt;- as.factor(k.means1$cluster)
+qplot(Petal.Width, Petal.Length, color=clusters, data=iris.train)</code></pre>
+<div class="rimage center">
+<img src="data:image/png;base64,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" title alt class="plot" />
+</div>
+<hr />
+</div>
+<div id="compare-to-real-labels" class="section level2">
+<h2>Compare to real labels</h2>
+<pre class="r"><code>table(k.means1$cluster, iris.train$Species)</code></pre>
+<pre><code>   
+    setosa versicolor virginica
+  1     35          0         0
+  2      0          2        26
+  3      0         33         9</code></pre>
+<hr />
+</div>
+<div id="build-predictor" class="section level2">
+<h2>Build Predictor</h2>
+<pre class="r"><code>fit &lt;- train(clusters ~ ., data=subset(iris.train, select=-c(Species)), method=&quot;rpart&quot;)
+table(predict(fit, iris.train), iris.train$Species)</code></pre>
+<pre><code>   
+    setosa versicolor virginica
+  1     35          0         0
+  2      0          0        24
+  3      0         35        11</code></pre>
+<hr />
+</div>
+<div id="apply-on-test" class="section level2">
+<h2>Apply on Test</h2>
+<pre class="r"><code>test.cluster.pred &lt;- predict(fit, iris.test)
+table(test.cluster.pred, iris.test$Species)</code></pre>
+<pre><code>                 
+test.cluster.pred setosa versicolor virginica
+                1     15          0         0
+                2      0          0        10
+                3      0         15         5</code></pre>
+<hr />
+</div>
+<div id="notes-and-further-reading" class="section level2">
+<h2>Notes and Further Reading</h2>
+<ul>
+<li>The <code>cl_predict</code> function in the <code>clue</code> package provides similar functionality</li>
+<li>Beware over-interpretation of clusters!</li>
+<li>This is one basic approach to <a href="https://en.wikipedia.org/wiki/Recommender_system">recommendation engines</a></li>
+<li><a href="http://www-stat.stanford.edu/~tibs/ElemStatLearn/">Elements of Statistical Learning</a></li>
+<li><a href="http://www-bcf.usc.edu/~gareth/ISL/">Introduction to Statistical Learning</a></li>
+</ul>
+</div>
 
 
 </div>
